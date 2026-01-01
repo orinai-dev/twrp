@@ -9,26 +9,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/catthehacker/ubuntu:runner-20.04
     
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: Free Disk Space
-      run: |
-        sudo rm -rf /usr/share/dotnet
-        sudo rm -rf /opt/ghc
-        sudo rm -rf "/usr/local/share/boost"
-        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-    
     - name: Install Build Dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y git-core gnupg flex bison gperf build-essential \
+        apt-get update
+        apt-get install -y git-core gnupg flex bison gperf build-essential \
           zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 \
-          lib32ncurses-dev x11proto-core-dev libx11-dev lib32z1-dev ccache \
-          libgl1-mesa-dev libxml2-utils xsltproc unzip
+          lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev ccache \
+          libgl1-mesa-dev libxml2-utils xsltproc unzip python2
+        ln -sf /usr/bin/python2 /usr/bin/python
 
     - name: Install Repo Tool
       run: |
@@ -48,15 +44,9 @@ jobs:
 
     - name: Setup Device Tree
       run: |
-        # Copy our device tree into the correct path in the workspace
-        # We are currently in the root of the runner, workspace is checked out
-        # The device path is defined in BoardConfig.mk (device/samsung/j2corey20lte)
-        
         WORKDIR="$PWD/workspace"
         DEVICE_PATH="device/samsung/j2corey20lte"
-        
         mkdir -p $WORKDIR/$DEVICE_PATH
-        # Copy everything from current repo (excluding .git and workspace) to the device path
         rsync -av --exclude='.git' --exclude='workspace' ./ $WORKDIR/$DEVICE_PATH/
 
     - name: Build Recovery
