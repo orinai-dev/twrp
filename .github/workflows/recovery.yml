@@ -51,6 +51,7 @@ jobs:
         rsync -av --exclude='.git' --exclude='workspace' ./ $WORKDIR/$DEVICE_PATH/
 
     - name: Build Recovery
+      shell: bash
       run: |
         cd workspace
         export ALLOW_MISSING_DEPENDENCIES=true
