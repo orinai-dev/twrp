@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/catthehacker/ubuntu:runner-20.04
+      options: --user root
     
     steps:
     - name: Checkout Code
