@@ -63,6 +63,10 @@ jobs:
       run: |
         cd workspace
         export ALLOW_MISSING_DEPENDENCIES=true
+        export PYTHON=/usr/bin/python2
+        export PATH=/usr/bin:$PATH
+        python --version
+        which python
         source build/envsetup.sh
         lunch omni_j2corey20lte-eng
         mka recoveryimage
